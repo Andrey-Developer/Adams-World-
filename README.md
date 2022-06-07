@@ -1,4 +1,0 @@
-# Adams-World-
-
-
-the gaming 
