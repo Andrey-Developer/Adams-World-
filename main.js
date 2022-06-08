@@ -1,225 +1,594 @@
-class TriviaGameShow {
-    constructor(element, options={}) {
-       
-       //Which categories we should use (or use default is nothing provided)
-       this.useCategoryIds = options.useCategoryIds || [ 1892, 4483, 88, 218]; 
-       /*
-          Default Categories pulled from https://jservice.io/search:
-          ---
-          1892: Video Games
-          4483: Three Letter Animals
-          88: Geography
-          218: Science and Nature
-       */      
- 
-       //Database
-       this.categories = [];
-       this.clues = {};
-       
-       //State
-       this.currentClue = null;
-       this.score = 0;
-       
-       //Elements
-       this.boardElement = element.querySelector(".board");
-       this.scoreCountElement = element.querySelector(".score-count");
-       this.formElement = element.querySelector("form");
-       this.inputElement = element.querySelector("input[name=user-answer]");
-       this.modalElement = element.querySelector(".card-modal");
-       this.clueTextElement = element.querySelector(".clue-text");
-       this.resultElement = element.querySelector(".result");
-       this.resultTextElement = element.querySelector(".result_correct-answer-text");
-       this.successTextElement = element.querySelector(".result_success");
-       this.failTextElement = element.querySelector(".result_fail");
+/* Event Listeners */
+document.getElementById("submit-btn").addEventListener("click", onSubmit);
+document.getElementById("UI").addEventListener("click", openUserInterface);
+document.getElementById("?info").addEventListener("click", openInfoWindow);
+document.getElementById("infoClose").addEventListener("click", closeInfoWindow);
+
+// <td> vent listeners
+document.getElementById("cell_1A").addEventListener("click", cell_1A_js_func);
+document.getElementById("cell_1B").addEventListener("click", cell_1B_js_func);
+document.getElementById("cell_1C").addEventListener("click", cell_1C_js_func);
+document.getElementById("cell_1D").addEventListener("click", cell_1D_js_func);
+document.getElementById("cell_1E").addEventListener("click", cell_1E_js_func);
+document.getElementById("cell_2A").addEventListener("click", cell_2A_js_func);
+document.getElementById("cell_2B").addEventListener("click", cell_2B_js_func);
+document.getElementById("cell_2C").addEventListener("click", cell_2C_js_func);
+document.getElementById("cell_2D").addEventListener("click", cell_2D_js_func);
+document.getElementById("cell_2E").addEventListener("click", cell_2E_js_func);
+document.getElementById("cell_3A").addEventListener("click", cell_3A_js_func);
+document.getElementById("cell_3B").addEventListener("click", cell_3B_js_func);
+document.getElementById("cell_3C").addEventListener("click", cell_3C_js_func);
+document.getElementById("cell_3D").addEventListener("click", cell_3D_js_func);
+document.getElementById("cell_3E").addEventListener("click", cell_3E_js_func);
+document.getElementById("cell_4A").addEventListener("click", cell_4A_js_func);
+document.getElementById("cell_4B").addEventListener("click", cell_4B_js_func);
+document.getElementById("cell_4C").addEventListener("click", cell_4C_js_func);
+document.getElementById("cell_4D").addEventListener("click", cell_4D_js_func);
+document.getElementById("cell_4E").addEventListener("click", cell_4E_js_func);
+document.getElementById("cell_5A").addEventListener("click", cell_5A_js_func);
+document.getElementById("cell_5B").addEventListener("click", cell_5B_js_func);
+document.getElementById("cell_5C").addEventListener("click", cell_5C_js_func);
+document.getElementById("cell_5D").addEventListener("click", cell_5D_js_func);
+document.getElementById("cell_5E").addEventListener("click", cell_5E_js_func);
+document.getElementById("cell_6A").addEventListener("click", cell_6A_js_func);
+document.getElementById("cell_6B").addEventListener("click", cell_6B_js_func);
+document.getElementById("cell_6C").addEventListener("click", cell_6C_js_func);
+document.getElementById("cell_6D").addEventListener("click", cell_6D_js_func);
+document.getElementById("cell_6E").addEventListener("click", cell_6E_js_func);
+
+
+function getRadioValue() {
+  var inputs = document.getElementsByName("gameType");
+  for (var i = 0; i < inputs.length; i++) {
+    if (inputs[i].checked) {
+      return inputs[i].value;
     }
+  }
+};
+
+function onSubmit() {
+  console.log("run");
  
-    initGame() {
-       //Bind event handlers
-       this.boardElement.addEventListener("click", event => {
-          if (event.target.dataset.clueId) {
-             this.handleClueClick(event);
-          }
-       });
-       this.formElement.addEventListener("submit", event => {
-          this.handleFormSubmit(event);
-       });
-       
-       //Render initial state of score
-       this.updateScore(0);
-       
-       //Kick off the category fetch
-       this.fetchCategories();
+ // Get values of <textarea>'s input
+ // Convert value to JavaScript variable
+ var cell_1A_get_question = document.getElementById("cell_1A-setup-question").value;
+ var cell_1A_get_answer   = document.getElementById("cell_1A-setup-question").value;
+ var cell_1B_get_question = document.getElementById("cell_1B-setup-question").value;
+ var cell_1B_get_answer   = document.getElementById("cell_1B-setup-question").value;
+ var cell_1C_get_question = document.getElementById("cell_1C-setup-question").value;
+ var cell_1C_get_answer   = document.getElementById("cell_1C-setup-question").value;
+ var cell_1D_get_question = document.getElementById("cell_1D-setup-question").value;
+ var cell_1D_get_answer   = document.getElementById("cell_1D-setup-question").value;
+ var cell_1E_get_question = document.getElementById("cell_1E-setup-question").value;
+ var cell_1E_get_answer   = document.getElementById("cell_1E-setup-question").value;
+ var cell_2A_get_question = document.getElementById("cell_2A-setup-question").value;
+ var cell_2A_get_answer   = document.getElementById("cell_2A-setup-question").value;
+ var cell_2B_get_question = document.getElementById("cell_2B-setup-question").value;
+ var cell_2B_get_answer   = document.getElementById("cell_2B-setup-question").value;
+ var cell_2C_get_question = document.getElementById("cell_2C-setup-question").value;
+ var cell_2C_get_answer   = document.getElementById("cell_2C-setup-question").value;
+ var cell_2D_get_question = document.getElementById("cell_2D-setup-question").value;
+ var cell_2D_get_answer   = document.getElementById("cell_2D-setup-question").value;
+ var cell_2E_get_question = document.getElementById("cell_2E-setup-question").value;
+ var cell_2E_get_answer   = document.getElementById("cell_2E-setup-question").value;
+ var cell_3A_get_question = document.getElementById("cell_3A-setup-question").value;
+ var cell_3A_get_answer   = document.getElementById("cell_3A-setup-question").value;
+ var cell_3B_get_question = document.getElementById("cell_3B-setup-question").value;
+ var cell_3B_get_answer   = document.getElementById("cell_3B-setup-question").value;
+ var cell_3C_get_question = document.getElementById("cell_3C-setup-question").value;
+ var cell_3C_get_answer   = document.getElementById("cell_3C-setup-question").value;
+ var cell_3D_get_question = document.getElementById("cell_3D-setup-question").value;
+ var cell_3D_get_answer   = document.getElementById("cell_3D-setup-question").value;
+ var cell_3E_get_question = document.getElementById("cell_3E-setup-question").value;
+ var cell_3E_get_answer   = document.getElementById("cell_3E-setup-question").value;
+ var cell_4A_get_question = document.getElementById("cell_4A-setup-question").value;
+ var cell_4A_get_answer   = document.getElementById("cell_4A-setup-question").value;
+ var cell_4B_get_question = document.getElementById("cell_4B-setup-question").value;
+ var cell_4B_get_answer   = document.getElementById("cell_4B-setup-question").value;
+ var cell_4C_get_question = document.getElementById("cell_4C-setup-question").value;
+ var cell_4C_get_answer   = document.getElementById("cell_4C-setup-question").value;
+ var cell_4D_get_question = document.getElementById("cell_4D-setup-question").value;
+ var cell_4D_get_answer   = document.getElementById("cell_4D-setup-question").value;
+ var cell_4E_get_question = document.getElementById("cell_4E-setup-question").value;
+ var cell_4E_get_answer   = document.getElementById("cell_4E-setup-question").value;
+ var cell_5A_get_question = document.getElementById("cell_5A-setup-question").value;
+ var cell_5A_get_answer   = document.getElementById("cell_5A-setup-question").value;
+ var cell_5B_get_question = document.getElementById("cell_5B-setup-question").value;
+ var cell_5B_get_answer   = document.getElementById("cell_5B-setup-question").value;
+ var cell_5C_get_question = document.getElementById("cell_5C-setup-question").value;
+ var cell_5C_get_answer   = document.getElementById("cell_5C-setup-question").value;
+ var cell_5D_get_question = document.getElementById("cell_5D-setup-question").value;
+ var cell_5D_get_answer   = document.getElementById("cell_5D-setup-question").value;
+ var cell_5E_get_question = document.getElementById("cell_5E-setup-question").value;
+ var cell_5E_get_answer   = document.getElementById("cell_5E-setup-question").value;
+ var cell_6A_get_question = document.getElementById("cell_6A-setup-question").value;
+ var cell_6A_get_answer   = document.getElementById("cell_6A-setup-question").value;
+ var cell_6B_get_question = document.getElementById("cell_6B-setup-question").value; 
+ var cell_6B_get_answer   = document.getElementById("cell_6B-setup-question").value;
+ var cell_6C_get_question = document.getElementById("cell_6C-setup-question").value;
+ var cell_6C_get_answer   = document.getElementById("cell_6C-setup-question").value;
+ var cell_6D_get_question = document.getElementById("cell_6D-setup-question").value;
+ var cell_6D_get_answer   = document.getElementById("cell_6D-setup-question").value;
+ var cell_6E_get_question = document.getElementById("cell_6E-setup-question").value;
+ var cell_6E_get_answer   = document.getElementById("cell_6E-setup-question").value;
+ 
+ // document.getElementById("myTextarea").value = "Fifth Avenue, New York City";
+ 
+ 
+ 
+  var selections = ["Questions", "Answers"];
+  var selected = getRadioValue();
+  if (selected === "Questions") {
+    $(document).ready(function() {
+      $('td').click(function() {
+        $(this).text("question");
+        $(this).removeClass('.display-default');
+        $(this).removeClass('.display-answer');
+        $(this).addClass('.display-question');
+      });
+      $('td').dblclick(function() {
+        $(this).text("answer");
+        $(this).removeClass('.display-default');
+        $(this).removeClass('.display-question');
+        $(this).addClass('.display-answer');
+      });
+      $('#UserInterface').hide();
+      $('#board').show();
+      $('#toolbar').show();
+     
+      $.fn.gotoAnchor = function(anchor) {
+       location.href = this.selector;
+      }
+      $('#1').gotoAnchor();
+     
+      $('#?info').click(function(){
+       $('#infoWindow').removeClass("inactive-infoWindow");
+       $('#infoWindow').addClass("active-infoWindow");
+      });
+      $('#infoClose').click(function(){
+       $('#infoWindow').removeClass("active-infoWindow");
+       $('#infoWindow').addClass("inactive-infoWindow");
+      });
+     
+    });
+  } else if (selected === "Answers") {
+    $(document).ready(function() {
+      $('#gameType-TXT1').css("color", "#000000");
+      $('#gameType-TXT2').css("color", "#000000");
+      $('td').click(function() {
+        $(this).text("answer");
+        $(this).removeClass('.display-default');
+        $(this).removeClass('.display-question');
+        $(this).addClass('.display-answer');
+      });
+      $('#gameType-TXT1').css("color", "#000000");
+      $('#gameType-TXT2').css("color", "#000000");
+      $('td').dblclick(function() {
+        $(this).text("question");
+        $(this).removeClass('.display-default');
+        $(this).removeClass('.display-answer');
+        $(this).addClass('.display-question');
+      });
+      $('#UserInterface').hide();
+      $('#board').show();
+      $('#toolbar').show();
+     
+      $.fn.gotoAnchor = function(anchor) {
+       location.href = this.selector;
+      }
+      $('#1').gotoAnchor();
+     
+     $('#?info').click(function(){
+      $('#infoWindow').removeClass("inactive-infoWindow");
+      $('#infoWindow').addClass("active-infoWindow");
+     });
+     $('#infoClose').click(function(){
+      $('#infoWindow').removeClass("active-infoWindow");
+      $('#infoWindow').addClass("inactive-infoWindow");
+     });
+     
+    });
+  } else {
+    $.fn.gotoAnchor = function(anchor) {
+     location.href = this.selector;
     }
-    
+    $('#2').gotoAnchor();
+   
+    alert("ERROR: Unable to identify game type!\n TROUBLESHOOT: Select a game type.")
+    $('#gameType-TXT1').css("color", "#FF0000");
+    $('#gameType-TXT1').css("font-weight", "bold");
+    $('#gameType-TXT2').css("color", "#FF0000");
+    $('#gameType-TXT2').css("font-weight", "bold");
+    $('td','#UserInterface','#board', '#toolbar').stop();
+  }
  
-    fetchCategories() {      
-       //Fetch all of the data from the API
-       const categories = this.useCategoryIds.map(category_id => {
-          return new Promise((resolve, reject) => {
-             fetch(`https://jservice.io/api/category?id=${category_id}`)
-                .then(response => response.json()).then(data => {
-                   resolve(data);
-                });
-          });
-       });
-       
-       //Sift through the data when all categories come back
-       Promise.all(categories).then(results => {
-          
-          //Build up our list of categories
-          results.forEach((result, categoryIndex) => {
-             
-             //Start with a blank category
-             var category = {
-                title: result.title,
-                clues: []
-             }
-             
-             //Add every clue within a category to our database of clues
-             var clues = shuffle(result.clues).splice(0,5).forEach((clue, index) => {
-                console.log(clue)
-                
-                //Create unique ID for this clue
-                var clueId = categoryIndex + "-" + index;
-                category.clues.push(clueId);
-                
-                //Add clue to DB
-                this.clues[clueId] = {
-                   question: clue.question,
-                   answer: clue.answer,
-                   value: (index + 1) * 100
-                };
-             })
-             
-             //Add this category to our DB of categories
-             this.categories.push(category);
-          });
-          
-          //Render each category to the DOM
-          this.categories.forEach((c) => {
-             this.renderCategory(c);
-          });
-       });
-    }
+};
+
+function openUserInterface() {
+  $('#UserInterface').show();
+  $('#board').hide();
+  $('#toolbar').hide();
+};
+
+
+// Daily Double
+var random = Math.random();
+
+
+
+// <td> single-click functions
+
+function cell_1A_js_func() {
+  document.getElementById("cell_1A").innerHTML = "test" /*cell_1A_get_question*/;
+  console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
-    renderCategory(category) {      
-       let column = document.createElement("div");
-       column.classList.add("column");
-       column.innerHTML = (
-          `<header>${category.title}</header>
-          <ul>
-          </ul>`
-       ).trim();
-       
-       var ul = column.querySelector("ul");
-       category.clues.forEach(clueId => {
-          var clue = this.clues[clueId];
-          ul.innerHTML += `<li><button data-clue-id=${clueId}>${clue.value}</button></li>`
-       })
-       
-       //Add to DOM
-       this.boardElement.appendChild(column);
-    }
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_1B_js_func() {
+ document.getElementById("cell_1B").innerHTML = cell_1B_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
-    updateScore(change) {
-       this.score += change;
-       this.scoreCountElement.textContent = this.score;
-    }
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_1C_js_func() {
+ document.getElementById("cell_1C").innerHTML = cell_1C_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
-    handleClueClick(event) {
-       var clue = this.clues[event.target.dataset.clueId];
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_1D_js_func() {
+ document.getElementById("cell_1D").innerHTML = cell_1D_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
-       //Mark this button as used
-       event.target.classList.add("used");
-       
-       //Clear out the input field
-       this.inputElement.value = "";
-       
-       //Update current clue
-       this.currentClue = clue;
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_1E_js_func() {
+ document.getElementById("cell_1E").innerHTML = cell_1E_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
-       //Update the text
-       this.clueTextElement.textContent = this.currentClue.question;
-       this.resultTextElement.textContent = this.currentClue.answer;
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_2A_js_func() {
+ document.getElementById("cell_2A").innerHTML = cell_2A_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
-       //Hide the result
-       this.modalElement.classList.remove("showing-result");
-       
-       //Show the modal
-       this.modalElement.classList.add("visible");
-       this.inputElement.focus();
-    }
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_2B_js_func() {
+ document.getElementById("cell_2B").innerHTML = cell_2B_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
-    //Handle an answer from user
-    handleFormSubmit(event) {
-       event.preventDefault();
-       
-       var isCorrect = this.cleanseAnswer(this.inputElement.value) === this.cleanseAnswer(this.currentClue.answer);
-       if (isCorrect) {
-          this.updateScore(this.currentClue.value);
-       }
-       
-       //Show answer
-       this.revealAnswer(isCorrect);
-    }
-    
-    //Standardize an answer string so we can compare and accept variations
-    cleanseAnswer(input="") {
-       var friendlyAnswer = input.toLowerCase();
-       friendlyAnswer = friendlyAnswer.replace("<i>", "");
-       friendlyAnswer = friendlyAnswer.replace("</i>", "");
-       friendlyAnswer = friendlyAnswer.replace(/ /g, "");
-       friendlyAnswer = friendlyAnswer.replace(/"/g, "");
-       friendlyAnswer = friendlyAnswer.replace(/^a /, "");
-       friendlyAnswer = friendlyAnswer.replace(/^an /, "");      
-       return friendlyAnswer.trim();
-    }
-    
-    
-    revealAnswer(isCorrect) {
-       
-       //Show the individual success/fail case
-       this.successTextElement.style.display = isCorrect ? "block" : "none";
-       this.failTextElement.style.display = !isCorrect ? "block" : "none";
-       
-       //Show the whole result container
-       this.modalElement.classList.add("showing-result");
-       
-       //Disappear after a short bit
-       setTimeout(() => {
-          this.modalElement.classList.remove("visible");
-       }, 3000);
-    }
-    
- }
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_2C_js_func() {
+ document.getElementById("cell_2C").innerHTML = cell_2C_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_2D_js_func() {
+ document.getElementById("cell_2D").innerHTML = cell_2D_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_2E_js_func() {
+ document.getElementById("cell_2E").innerHTML = cell_2E_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
- //Utils -----------------------------------
- /**https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
-  * Shuffles array in place.
-  * @param {Array} a items An array containing the items.
-  */
- function shuffle(a) {
-     var j, x, i;
-     for (i = a.length - 1; i > 0; i--) {
-         j = Math.floor(Math.random() * (i + 1));
-         x = a[i];
-         a[i] = a[j];
-         a[j] = x;
-     }
-     return a;
- } //https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_3A_js_func() {
+ document.getElementById("cell_3A").innerHTML = cell_3A_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
- //-------------------------------------------
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_3B_js_func() {
+ document.getElementById("cell_3B").innerHTML = cell_3B_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
- const game = new TriviaGameShow( document.querySelector(".app"), {});
- game.initGame();
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_3C_js_func() {
+ document.getElementById("cell_3C").innerHTML = cell_3C_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_3D_js_func() {
+ document.getElementById("cell_3D").innerHTML = cell_3D_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
- /* BONUS CHALLENGES - cool enhancements */
- //1. Change answer logic to be in question format. "What is a... ___answer___"
- //2. Query value based on API response, not our own random ordering
- //3. Multiplayer scores!
- //4. Make your own categories and clues
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_3E_js_func() {
+ document.getElementById("cell_3E").innerHTML = cell_3E_get_question;
+ console.log("EVENT: USER CLICKED ON 'CELL_1A' ('<tr>#1_<td>#1')");
  
+  // Test for errors and log information on console
+  if (document.getElementById("cell_1A").innerHTML = cell_1A_get_question) {
+    console.log(" SUCCESS");
+    console.log("  ELEMENT VALUE CHANGED TO: '" + cell_1A_get_question + "'");
+  }
+  else if (document.getElementById("cell_1A").innerHTML != cell_1A_get_question) {
+    alert("ERROR: Unable to change element value.");
+    console.log(" FAILURE");
+    console.log("  ERROR: UNABLE TO CHANGE ELEMENT VALUE");
+  }
+  else {
+   alert("ERROR: Unknown error.");
+   conosle.log(" FAILURE");
+   console.log("  ERROR: UNKNOWN ERROR");
+  }
+};
+
+function cell_4A_js_func() {
+ document.getElementById("cell_4A").innerHTML = cell_4A_get_question;
+};
+
+function cell_4B_js_func() {
+ document.getElementById("cell_4B").innerHTML = cell_4B_get_question;
+};
+
+function cell_4C_js_func() {
+ document.getElementById("cell_4C").innerHTML = cell_4C_get_question;
+};
+
+function cell_4D_js_func() {
+ document.getElementById("cell_4D").innerHTML = cell_4D_get_question;
+};
+
+function cell_4E_js_func() {
+ document.getElementById("cell_4E").innerHTML = cell_4E_get_question;
+};
+
+function cell_5A_js_func() {
+ document.getElementById("cell_5A").innerHTML = cell_5A_get_question;
+};
+
+function cell_5B_js_func() {
+ document.getElementById("cell_5B").innerHTML = cell_5B_get_question;
+};
+
+function cell_5C_js_func() {
+ document.getElementById("cell_5C").innerHTML = cell_5C_get_question;
+};
+
+function cell_5D_js_func() {
+ document.getElementById("cell_5D").innerHTML = cell_5D_get_question;
+};
+
+function cell_5E_js_func() {
+ document.getElementById("cell_5E").innerHTML = cell_5E_get_question;
+};
+
+function cell_6A_js_func() {
+ document.getElementById("cell_6A").innerHTML = cell_6A_get_question;
+};
+
+function cell_6B_js_func() {
+ document.getElementById("cell_6B").innerHTML = cell_6B_get_question;
+};
+
+function cell_6C_js_func() {
+ document.getElementById("cell_6C").innerHTML = cell_6C_get_question;
+};
+
+function cell_6D_js_func() {
+ document.getElementById("cell_6D").innerHTML = cell_6D_get_question;
+};
+
+function cell_6E_js_func() {
+ document.getElementById("cell_6E").innerHTML = cell_6E_get_question;
+};
